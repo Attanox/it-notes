@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import Link from "next/link";
 
 import { trpc } from "../utils/trpc";
 import type { Book } from "../types/books";
@@ -13,6 +14,9 @@ const BooksList = (props: { books: Book[] }) => {
         <div key={book.isbn13} className="flex-col">
           <h4 className="text-2xl">{book.title}</h4>
           <h5 className="text-xl">{book.subtitle}</h5>
+          <Link href={`/books/${book.isbn13}`}>
+            <a className="link">Read more...</a>
+          </Link>
           <div className="w-full h-5" />
         </div>
       ))}

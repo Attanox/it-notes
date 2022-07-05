@@ -1,6 +1,7 @@
 import { createRouter } from "./context";
 import { z } from "zod";
 import { fetchBooks } from "../../utils/fetch";
+import { TRPCError } from "@trpc/server";
 
 export const booksRouter = createRouter()
   .query("newest", {
@@ -15,8 +16,14 @@ export const booksRouter = createRouter()
       return bookList.books;
     },
   })
-  .query("getAll", {
+  .query("secret", {
     async resolve({ ctx }) {
-      return await ctx.prisma.example.findMany();
+      if (!ctx.user) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You cannot be here",
+        });
+      }
+      return true;
     },
   });
