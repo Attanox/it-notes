@@ -1,26 +1,44 @@
-import { useRouter } from "next/router";
 import * as React from "react";
-import { trpc } from "../utils/trpc";
+import Link from "next/link";
 
-const LogOutBtn = () => {
+import { useAuth } from "context/auth";
+import { useRouter } from "next/router";
+import { trpc } from "utils/trpc";
+
+const AuthBtn = () => {
   const router = useRouter();
   const mutation = trpc.useMutation(["auth.logout"]);
+  const { user, logoutUser } = useAuth();
 
   const onClick = () => {
-    mutation.mutate();
+    try {
+      mutation.mutate();
+      logoutUser();
+      router.push("/login");
+    } catch (e) {
+      console.error(e);
+    }
   };
 
-  if (!mutation.isLoading && mutation.data) {
-    router.push("/login");
+  if (!user) {
+    return (
+      <Link href="/login">
+        <a className="ml-auto btn btn-info btn-sm normal-case text-md">Login</a>
+      </Link>
+    );
   }
 
   return (
-    <button
-      onClick={onClick}
-      className="btn btn-error normal-case text-md ml-auto"
-    >
-      Logout
-    </button>
+    <div className="w-fit ml-auto flex-row align-center justify-center">
+      <span className="text-base text-slate-200">{user}</span>
+      <div className="w-4" />
+      <button
+        onClick={onClick}
+        className="btn btn-error btn-sm normal-case text-md"
+      >
+        Logout
+      </button>
+    </div>
   );
 };
 
@@ -28,7 +46,7 @@ const Navbar = () => {
   return (
     <div className="navbar bg-base-100 px-0  w-1/2 mx-auto">
       <a className="normal-case text-xl">BookNotes</a>
-      <LogOutBtn />
+      <AuthBtn />
     </div>
   );
 };

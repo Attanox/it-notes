@@ -1,18 +1,19 @@
 // src/pages/_app.tsx
 import { withTRPC } from "@trpc/next";
-import type { AppRouter } from "../server/router";
-import type { AppType } from "next/dist/shared/lib/utils";
 import superjson from "superjson";
+import type { AppRouter } from "server/router";
+import type { AppType } from "next/dist/shared/lib/utils";
+import { AuthProvider } from "context/auth";
+import { getBaseUrl } from "utils/router";
+import Navbar from "components/Navbar";
 import "../styles/globals.css";
-import { getBaseUrl } from "../utils/router";
-import Navbar from "../components/Navbar";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
-    <>
+    <AuthProvider>
       <Navbar />
       <Component {...pageProps} />
-    </>
+    </AuthProvider>
   );
 };
 

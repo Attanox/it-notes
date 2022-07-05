@@ -1,23 +1,31 @@
-import { useRouter } from "next/router";
 import * as React from "react";
-import { trpc } from "../utils/trpc";
+import { useRouter } from "next/router";
+
+import { useAuth } from "context/auth";
+import { trpc } from "utils/trpc";
 
 function LoginForm() {
   const router = useRouter();
+  const { loginUser } = useAuth();
 
   const $name = React.useRef<HTMLInputElement>(null);
   const $password = React.useRef<HTMLInputElement>(null);
 
   const mutation = trpc.useMutation(["auth.login"]);
 
-  const handleLogin = async () => {
-    const name = $name.current?.value || "";
-    const password = $password.current?.value || "";
+  const handleLogin = () => {
+    try {
+      const name = $name.current?.value || "";
+      const password = $password.current?.value || "";
 
-    mutation.mutate({ name, password });
+      mutation.mutate({ name, password });
+      loginUser(name);
 
-    if ($name.current) $name.current.value = "";
-    if ($password.current) $password.current.value = "";
+      if ($name.current) $name.current.value = "";
+      if ($password.current) $password.current.value = "";
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   if (!mutation.isLoading && mutation.data) router.push("/");
