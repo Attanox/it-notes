@@ -1,18 +1,44 @@
 // src/pages/_app.tsx
 import { withTRPC } from "@trpc/next";
 import superjson from "superjson";
-import type { AppRouter } from "server/router";
+import type { AppRouter } from "server/router/index.router";
 import type { AppType } from "next/dist/shared/lib/utils";
-import { AuthProvider } from "context/auth";
+import { AuthProvider, useAuth } from "context/auth";
 import { getBaseUrl } from "utils/router";
 import Navbar from "components/Navbar";
 import "../styles/globals.css";
+import { trpc } from "utils/trpc";
+import Spinner from "components/Spinner";
 
-const MyApp: AppType = ({ Component, pageProps }) => {
+const AppContent: AppType = ({ Component, pageProps }) => {
+  const { loginUser } = useAuth();
+  const query = trpc.useQuery(["auth.whoami"], {
+    onSuccess(data) {
+      console.log({ data });
+      if (data) loginUser(data?.name);
+    },
+  });
+
+  if (query.isLoading) {
+    return (
+      <div className="w-full min-h-screen flex items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
+
   return (
-    <AuthProvider>
+    <>
       <Navbar />
       <Component {...pageProps} />
+    </>
+  );
+};
+
+const App: AppType = (props) => {
+  return (
+    <AuthProvider>
+      <AppContent {...props} />
     </AuthProvider>
   );
 };
@@ -38,4 +64,4 @@ export default withTRPC<AppRouter>({
    * @link https://trpc.io/docs/ssr
    */
   ssr: false,
-})(MyApp);
+})(App);

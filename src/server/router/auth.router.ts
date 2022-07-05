@@ -97,4 +97,9 @@ export const authRouter = createRouter()
 
       return true;
     },
+  })
+  .query("whoami", {
+    resolve({ ctx }) {
+      return ctx.user;
+    },
   });
