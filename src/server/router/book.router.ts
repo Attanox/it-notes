@@ -37,6 +37,64 @@ export const booksRouter = createRouter()
       return bookNote;
     },
   })
+  .mutation("add-chapter", {
+    input: z.object({
+      bookID: z.string(),
+      payload: z.object({
+        title: z.string(),
+        text: z.string(),
+      }),
+    }),
+    async resolve({ ctx, input }) {
+      const chapter = await ctx.prisma.chapter.create({
+        data: {
+          ...input.payload,
+          bookNoteId: input.bookID,
+        },
+      });
+
+      console.log({ input, chapter });
+
+      return chapter;
+    },
+  })
+  .mutation("remove-chapter", {
+    input: z.object({
+      chapterID: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      await ctx.prisma.chapter.delete({
+        where: {
+          id: input.chapterID,
+        },
+      });
+
+      return true;
+    },
+  })
+  .query("list-chapters", {
+    input: z.object({
+      bookId: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      const bookNote = await ctx.prisma.bookNote.findFirst({
+        where: {
+          isbn13: input.bookId,
+          authorId: ctx.user?.id,
+        },
+      });
+
+      if (!bookNote) return null;
+
+      const chapters = await ctx.prisma.chapter.findMany({
+        where: {
+          bookNoteId: bookNote.isbn13,
+        },
+      });
+
+      return chapters;
+    },
+  })
   .query("secret", {
     async resolve({ ctx }) {
       if (!ctx.user) {
