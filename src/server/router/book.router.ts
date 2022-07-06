@@ -16,6 +16,27 @@ export const booksRouter = createRouter()
       return bookList.books;
     },
   })
+  .mutation("add-book", {
+    input: z.object({
+      title: z.string(),
+      subtitle: z.string().nullish(),
+      isbn13: z.string(),
+      price: z.string(),
+      image: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      const bookNote = await ctx.prisma.bookNote.create({
+        data: {
+          ...input,
+          authorId: ctx.user?.id || "",
+        },
+      });
+
+      console.log({ input, bookNote });
+
+      return bookNote;
+    },
+  })
   .query("secret", {
     async resolve({ ctx }) {
       if (!ctx.user) {

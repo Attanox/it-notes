@@ -1,4 +1,4 @@
-import type { BookList } from "../types/books";
+import type { Book, BookList } from "types/books";
 
 export function fetchBooks(type = "", customConfig = {}): Promise<BookList> {
   const config = {
@@ -7,6 +7,26 @@ export function fetchBooks(type = "", customConfig = {}): Promise<BookList> {
   };
 
   const url = `${process.env.BOOKS_URL}${type}`;
+
+  console.log({ url });
+
+  return fetch(url, config).then(async (response) => {
+    if (response.ok) {
+      return await response.json();
+    } else {
+      const errorMessage = await response.text();
+      return Promise.reject(new Error(errorMessage));
+    }
+  });
+}
+
+export function fetchBook(isbn13 = "", customConfig = {}): Promise<Book> {
+  const config = {
+    method: "GET",
+    ...customConfig,
+  };
+
+  const url = `${process.env.BOOKS_URL}books/${isbn13}`;
 
   console.log({ url });
 
