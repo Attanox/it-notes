@@ -1,24 +1,22 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
 
 import { trpc } from "../utils/trpc";
+import Spinner from "components/Spinner";
+import Card from "components/Card";
 import type { Book } from "../types/books";
 
 const BooksList = (props: { books: Book[] }) => {
   const { books } = props;
 
+  if (!books.length) {
+    return <p className="text-center text-2xl">No books :(</p>;
+  }
+
   return (
-    <div className="flex-col">
+    <div className="grid gap-4 grid-cols-3">
       {books.map((book) => (
-        <div key={book.isbn13} className="flex-col">
-          <h4 className="text-2xl">{book.title}</h4>
-          <h5 className="text-xl">{book.subtitle}</h5>
-          <Link href={`/books/${book.isbn13}`}>
-            <a className="link">Read more...</a>
-          </Link>
-          <div className="w-full h-5" />
-        </div>
+        <Card key={book.isbn13} book={book} />
       ))}
     </div>
   );
@@ -34,13 +32,18 @@ const Home: NextPage = () => {
         <meta name="description" content="Notes taking app for IT books" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="flex flex-col items-center justify-center w-1/2 min-h-screen mx-auto">
-        <div className="w-fit">
-          <h3 className="mt-4 text-3xl">Newest IT books:</h3>
+      <div className="flex flex-col w-full">
+        <div className="w-full h-full">
+          <h3 className="mt-4 text-3xl">Newest IT books</h3>
+          <div className="w-full h-5" />
 
-          <div className="py-6 text-2xl">
-            {isLoading ? <p>Loading..</p> : <BooksList books={data || []} />}
-          </div>
+          {isLoading ? (
+            <div className="w-full min-h-full flex justify-center items-center">
+              <Spinner />
+            </div>
+          ) : (
+            <BooksList books={data || []} />
+          )}
         </div>
       </div>
     </>

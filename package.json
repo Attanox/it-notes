@@ -15,7 +15,6 @@
     "@trpc/next": "^9.25.3",
     "@trpc/react": "^9.25.3",
     "@trpc/server": "^9.25.3",
-    "@uiw/react-md-editor": "^3.14.4",
     "bcrypt": "^5.0.1",
     "cookie": "^0.5.0",
     "daisyui": "^2.18.0",

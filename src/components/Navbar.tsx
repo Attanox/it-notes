@@ -44,7 +44,7 @@ const AuthBtn = () => {
 
 const Navbar = () => {
   return (
-    <div className="navbar bg-base-100 px-0  w-1/2 mx-auto">
+    <div className="navbar bg-base-100 px-0">
       <a className="normal-case text-xl">BookNotes</a>
       <AuthBtn />
     </div>

@@ -1,14 +1,18 @@
 // src/pages/_app.tsx
-import { withTRPC } from "@trpc/next";
 import superjson from "superjson";
+
+import { withTRPC } from "@trpc/next";
 import type { AppRouter } from "server/router/index.router";
 import type { AppType } from "next/dist/shared/lib/utils";
 import { AuthProvider, useAuth } from "context/auth";
 import { getBaseUrl } from "utils/router";
 import Navbar from "components/Navbar";
-import "../styles/globals.css";
 import { trpc } from "utils/trpc";
 import Spinner from "components/Spinner";
+
+import "../styles/globals.css";
+import "@uiw/react-md-editor/markdown-editor.css";
+import "@uiw/react-markdown-preview/markdown.css";
 
 const AppContent: AppType = ({ Component, pageProps }) => {
   const { loginUser } = useAuth();
@@ -28,10 +32,10 @@ const AppContent: AppType = ({ Component, pageProps }) => {
   }
 
   return (
-    <>
+    <div className="w-1/2 min-h-screen mx-auto">
       <Navbar />
       <Component {...pageProps} />
-    </>
+    </div>
   );
 };
 
