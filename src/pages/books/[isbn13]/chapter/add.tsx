@@ -3,6 +3,7 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 import { trpc } from "utils/trpc";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
@@ -21,16 +22,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 const onChangeMD = MDEditor?.defaultProps?.onChange;
 type TOnChangeMD = typeof onChangeMD;
 
-const ChapterText = (props: {
-  chapterText: React.RefObject<HTMLTextAreaElement>;
-}) => {
+const ChapterText = (props: { setChapterText: (s: string) => void }) => {
   const [value, setValue] = React.useState("");
 
   const onChange: TOnChangeMD = (value, e) => {
     setValue(value || "");
-    if (props.chapterText.current) {
-      props.chapterText.current.value = value || "";
-    }
+
+    props.setChapterText(value || "");
   };
 
   return <MDEditor value={value} onChange={onChange} />;
@@ -40,25 +38,30 @@ const AddChapter = ({
   bookID,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const addChapterMutation = trpc.useMutation(["books.add-chapter"]);
+  const router = useRouter();
 
   const $chapterTitle = React.useRef<HTMLInputElement>(null);
-  const $chapterText = React.useRef<HTMLTextAreaElement>(null);
+  const $chapterText = React.useRef<string>("");
 
   const onAddChapter = () => {
     if (!bookID) return;
+    console.log({ $chapterText: $chapterText.current });
+
     addChapterMutation.mutate({
       bookID: bookID,
       payload: {
-        text: $chapterText.current?.value || "",
+        text: $chapterText.current || "",
         title: $chapterTitle.current?.value || "",
       },
     });
 
-    if ($chapterText.current?.value) $chapterText.current.value = "";
     if ($chapterTitle.current?.value) $chapterTitle.current.value = "";
+    router.push(`/books/${bookID}`);
   };
 
-  console.log({ bookID });
+  const setChapterText = (s: string) => {
+    $chapterText.current = s;
+  };
 
   if (!bookID) return null;
 
@@ -78,7 +81,7 @@ const AddChapter = ({
 
       <div className="w-full h-5" />
 
-      <ChapterText chapterText={$chapterText} />
+      <ChapterText setChapterText={setChapterText} />
 
       <div className="w-full h-10" />
 
