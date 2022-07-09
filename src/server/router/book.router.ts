@@ -77,20 +77,14 @@ export const booksRouter = createRouter()
       bookId: z.string(),
     }),
     async resolve({ ctx, input }) {
-      const bookNote = await ctx.prisma.bookNote.findFirst({
-        where: {
-          isbn13: input.bookId,
-          authorId: ctx.user?.id,
-        },
-      });
-
-      if (!bookNote) return null;
-
-      const chapters = await ctx.prisma.chapter.findMany({
-        where: {
-          bookNoteId: bookNote.isbn13,
-        },
-      });
+      const chapters = await ctx.prisma.bookNote
+        .findFirst({
+          where: {
+            isbn13: input.bookId,
+            authorId: ctx.user?.id,
+          },
+        })
+        .chapters();
 
       return chapters;
     },

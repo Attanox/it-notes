@@ -4,13 +4,22 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { trpc } from "utils/trpc";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
+import GoBack from "components/GoBack";
+import { AiOutlinePlusCircle } from "react-icons/ai";
+import useWindowSize from "hooks/useWindowSize";
 
-const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
+  ssr: false,
+});
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+type LocalProps = {
+  bookID: string;
+};
+
+export const getServerSideProps: GetServerSideProps<LocalProps> = async (
+  ctx
+) => {
   const bookID = ctx?.params?.isbn13 as string;
-
-  console.log({ params: ctx?.params });
 
   return {
     props: {
@@ -24,6 +33,7 @@ type TOnChangeMD = typeof onChangeMD;
 
 const ChapterText = (props: { setChapterText: (s: string) => void }) => {
   const [value, setValue] = React.useState("");
+  const { height = 700 } = useWindowSize();
 
   const onChange: TOnChangeMD = (value, e) => {
     setValue(value || "");
@@ -31,7 +41,16 @@ const ChapterText = (props: { setChapterText: (s: string) => void }) => {
     props.setChapterText(value || "");
   };
 
-  return <MDEditor value={value} onChange={onChange} />;
+  // taken from inspecting
+  const windowHeightMinusOtherElements = height - 84 - 64 - 20 - 32 - 40 - 10;
+
+  return (
+    <MDEditor
+      value={value}
+      onChange={onChange}
+      height={windowHeightMinusOtherElements}
+    />
+  );
 };
 
 const AddChapter = ({
@@ -45,7 +64,6 @@ const AddChapter = ({
 
   const onAddChapter = () => {
     if (!bookID) return;
-    console.log({ $chapterText: $chapterText.current });
 
     addChapterMutation.mutate({
       bookID: bookID,
@@ -67,14 +85,15 @@ const AddChapter = ({
 
   return (
     <div className="w-full flex flex-col">
-      <div className="form-control w-full max-w-xs">
-        <label className="label">
+      <div className="form-control w-1/2">
+        <label className="label" htmlFor="chapter-title">
           <span className="label-text">Chapter name</span>
         </label>
         <input
           type="text"
+          id="chapter-title"
           placeholder="Introduction"
-          className="input input-bordered w-full max-w-xs"
+          className="input input-bordered w-full"
           ref={$chapterTitle}
         />
       </div>
@@ -85,13 +104,18 @@ const AddChapter = ({
 
       <div className="w-full h-10" />
 
-      <button
-        onClick={onAddChapter}
-        disabled={addChapterMutation.isLoading}
-        className="btn btn-success w-32 ml-auto"
-      >
-        add chapter
-      </button>
+      <div className="flex flex-row">
+        <GoBack to={`/books/${bookID}`} />
+
+        <button
+          onClick={onAddChapter}
+          disabled={addChapterMutation.isLoading}
+          className="btn btn-success btn-sm gap-2 ml-auto"
+        >
+          <AiOutlinePlusCircle />
+          Add chapter
+        </button>
+      </div>
     </div>
   );
 };

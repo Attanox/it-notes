@@ -14,7 +14,7 @@ const BooksList = (props: { books: Book[] }) => {
   }
 
   return (
-    <div className="grid gap-4 grid-cols-3">
+    <div className="grid gap-8 grid-cols-3">
       {books.map((book) => (
         <Card key={book.isbn13} book={book} />
       ))}
