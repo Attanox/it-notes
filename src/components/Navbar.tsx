@@ -30,14 +30,30 @@ const AuthBtn = () => {
 
   return (
     <div className="w-fit ml-auto flex-row align-center justify-center">
-      <span className="text-base text-slate-200">{user}</span>
-      <div className="w-4" />
-      <button
-        onClick={onClick}
-        className="btn btn-error btn-sm normal-case text-md"
-      >
-        Logout
-      </button>
+      <div className="dropdown dropdown-end">
+        <label tabIndex={0} className="cursor-pointer">
+          <div className="avatar placeholder">
+            <div className="bg-neutral-focus text-neutral-content rounded-full w-8">
+              <span className="text-xs">{user[0]?.trim()?.toUpperCase()}</span>
+            </div>
+          </div>
+        </label>
+        <ul
+          tabIndex={0}
+          className="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52"
+        >
+          <span className="w-full text-center text-md text-slate-200">
+            {user}
+          </span>
+          <div className="divider mt-1 mb-2" />
+          <button
+            onClick={onClick}
+            className="btn btn-error btn-sm normal-case text-base"
+          >
+            Logout
+          </button>
+        </ul>
+      </div>
     </div>
   );
 };
