@@ -1,6 +1,5 @@
 import React from "react";
 import { AiFillDelete, AiFillEdit, AiOutlinePlusCircle } from "react-icons/ai";
-import { IoChevronBackCircleOutline } from "react-icons/io5";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 import { trpc } from "utils/trpc";

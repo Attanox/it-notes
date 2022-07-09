@@ -10,5 +10,6 @@ export type Book = {
 export type BookList = {
   error: number;
   total: number;
+  page?: number;
   books: Book[];
 };

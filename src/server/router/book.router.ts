@@ -1,19 +1,34 @@
 import { createRouter } from "./context";
 import { z } from "zod";
-import { fetchBooks } from "../../utils/fetch";
-import { TRPCError } from "@trpc/server";
+import { fetchBooks } from "utils/fetch";
 
 export const booksRouter = createRouter()
   .query("newest", {
-    input: z
-      .object({
-        last: z.number().nullish(),
-      })
-      .nullish(),
-    async resolve({ input }) {
+    async resolve() {
       const bookList = await fetchBooks("new");
 
       return bookList.books;
+    },
+  })
+  .mutation("search", {
+    input: z.object({
+      searchQuery: z.string(),
+      page: z.number().nullish(),
+    }),
+    async resolve({ input }) {
+      let query = `search/${input.searchQuery}`;
+      if (input.page) {
+        query = `${query}/${input.page}`;
+      }
+
+      const { total, books } = await fetchBooks(query);
+
+      let pages = 1;
+      if (total > 0) {
+        pages = Math.ceil(Number(total) / Number(books.length));
+      }
+
+      return { books, pages };
     },
   })
   .mutation("add-book", {
@@ -118,16 +133,5 @@ export const booksRouter = createRouter()
       });
 
       return chapter;
-    },
-  })
-  .query("secret", {
-    async resolve({ ctx }) {
-      if (!ctx.user) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "You cannot be here",
-        });
-      }
-      return true;
     },
   });

@@ -8,8 +8,6 @@ export function fetchBooks(type = "", customConfig = {}): Promise<BookList> {
 
   const url = `${process.env.BOOKS_URL}${type}`;
 
-  console.log({ url });
-
   return fetch(url, config).then(async (response) => {
     if (response.ok) {
       return await response.json();
