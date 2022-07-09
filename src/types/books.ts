@@ -1,10 +1,9 @@
 export type Book = {
   title: string;
-  subtitle: string;
+  subtitle: string | null;
   isbn13: string;
   price: string;
   image: string;
-  url: string;
 };
 
 export type BookList = {

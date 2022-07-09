@@ -47,6 +47,14 @@ const AuthBtn = () => {
             {user}
           </span>
           <div className="divider mt-1 mb-2" />
+          <li>
+            <Link href="/my-notes">
+              <a className="btn-sm">My notes</a>
+            </Link>
+          </li>
+
+          <div className="h-4" />
+
           <button
             onClick={onClick}
             className="btn btn-error btn-sm normal-case text-base"

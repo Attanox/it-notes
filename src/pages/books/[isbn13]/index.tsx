@@ -67,8 +67,9 @@ const BookDetail = ({
       <div className="text-center">
         Please,{" "}
         <Link href="login">
-          <a className="link">login</a>, so you can take notes.
+          <a className="link">login</a>
         </Link>
+        , so you can take notes.
       </div>
     );
   }

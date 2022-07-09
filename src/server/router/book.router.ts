@@ -121,6 +121,17 @@ export const booksRouter = createRouter()
       return chapters;
     },
   })
+  .query("my-notes", {
+    async resolve({ ctx }) {
+      const bookNotes = await ctx.prisma.bookNote.findMany({
+        where: {
+          authorId: ctx.user?.id,
+        },
+      });
+
+      return bookNotes;
+    },
+  })
   .query("chapter", {
     input: z.object({
       chapterID: z.string(),
