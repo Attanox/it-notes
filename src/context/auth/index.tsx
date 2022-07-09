@@ -11,14 +11,18 @@ type TState = {
 
 const initialState: TState = { user: null };
 
-const AuthContext = React.createContext<{
-  user: string | null;
+const AuthAPIContext = React.createContext<{
   logoutUser: () => void;
   loginUser: (s: string) => void;
 }>({
-  user: initialState.user,
   logoutUser: () => {},
   loginUser: () => {},
+});
+
+const AuthUserContext = React.createContext<{
+  user: string | null;
+}>({
+  user: initialState.user,
 });
 
 const reducer = (state: TState, action: ReturnType<TActions>): TState => {
@@ -42,17 +46,20 @@ const reducer = (state: TState, action: ReturnType<TActions>): TState => {
 export const AuthProvider = ({ children }: React.PropsWithChildren<{}>) => {
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
+  const api = React.useMemo(
+    () => ({
+      loginUser: (s: string) => dispatch(loginUser(s)),
+      logoutUser: () => dispatch(logoutUser()),
+    }),
+    []
+  );
+
   return (
-    <AuthContext.Provider
-      value={{
-        user: state.user,
-        loginUser: (s: string) => dispatch(loginUser(s)),
-        logoutUser: () => dispatch(logoutUser()),
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
+    <AuthUserContext.Provider value={{ user: state.user }}>
+      <AuthAPIContext.Provider value={api}>{children}</AuthAPIContext.Provider>
+    </AuthUserContext.Provider>
   );
 };
 
-export const useAuth = () => React.useContext(AuthContext);
+export const useAuthAPI = () => React.useContext(AuthAPIContext);
+export const useAuthUser = () => React.useContext(AuthUserContext);

@@ -1,14 +1,15 @@
 import * as React from "react";
 import Link from "next/link";
 
-import { useAuth } from "context/auth";
+import { useAuthAPI, useAuthUser } from "context/auth";
 import { useRouter } from "next/router";
 import { trpc } from "utils/trpc";
 
 const AuthBtn = () => {
   const router = useRouter();
   const mutation = trpc.useMutation(["auth.logout"]);
-  const { user, logoutUser } = useAuth();
+  const { logoutUser } = useAuthAPI();
+  const { user } = useAuthUser();
 
   const onClick = () => {
     try {

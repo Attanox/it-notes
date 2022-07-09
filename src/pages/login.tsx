@@ -1,12 +1,12 @@
 import * as React from "react";
 import { useRouter } from "next/router";
 
-import { useAuth } from "context/auth";
+import { useAuthAPI } from "context/auth";
 import { trpc } from "utils/trpc";
 
 function LoginForm() {
   const router = useRouter();
-  const { loginUser } = useAuth();
+  const { loginUser } = useAuthAPI();
 
   const $name = React.useRef<HTMLInputElement>(null);
   const $password = React.useRef<HTMLInputElement>(null);

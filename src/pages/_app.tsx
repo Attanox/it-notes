@@ -4,7 +4,7 @@ import superjson from "superjson";
 import { withTRPC } from "@trpc/next";
 import type { AppRouter } from "server/router/index.router";
 import type { AppType } from "next/dist/shared/lib/utils";
-import { AuthProvider, useAuth } from "context/auth";
+import { AuthProvider, useAuthAPI } from "context/auth";
 import { getBaseUrl } from "utils/router";
 import Navbar from "components/Navbar";
 import { trpc } from "utils/trpc";
@@ -15,7 +15,7 @@ import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 
 const AppContent: AppType = ({ Component, pageProps }) => {
-  const { loginUser } = useAuth();
+  const { loginUser } = useAuthAPI();
   const query = trpc.useQuery(["auth.whoami"], {
     onSuccess(data) {
       console.log({ data });
