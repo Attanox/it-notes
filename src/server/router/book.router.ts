@@ -32,8 +32,6 @@ export const booksRouter = createRouter()
         },
       });
 
-      console.log({ input, bookNote });
-
       return bookNote;
     },
   })
@@ -53,7 +51,26 @@ export const booksRouter = createRouter()
         },
       });
 
-      console.log({ input, chapter });
+      return chapter;
+    },
+  })
+  .mutation("update-chapter", {
+    input: z.object({
+      chapterID: z.string(),
+      payload: z.object({
+        title: z.string(),
+        text: z.string(),
+      }),
+    }),
+    async resolve({ ctx, input }) {
+      const chapter = await ctx.prisma.chapter.update({
+        data: {
+          ...input.payload,
+        },
+        where: {
+          id: input.chapterID,
+        },
+      });
 
       return chapter;
     },
@@ -87,6 +104,20 @@ export const booksRouter = createRouter()
         .chapters();
 
       return chapters;
+    },
+  })
+  .query("chapter", {
+    input: z.object({
+      chapterID: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      const chapter = await ctx.prisma.chapter.findFirst({
+        where: {
+          id: input.chapterID,
+        },
+      });
+
+      return chapter;
     },
   })
   .query("secret", {

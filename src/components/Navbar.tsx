@@ -33,8 +33,8 @@ const AuthBtn = () => {
       <div className="dropdown dropdown-end">
         <label tabIndex={0} className="cursor-pointer">
           <div className="avatar placeholder">
-            <div className="bg-neutral-focus text-neutral-content rounded-full w-8">
-              <span className="text-xs">{user[0]?.trim()?.toUpperCase()}</span>
+            <div className="bg-neutral-focus text-neutral-content rounded-full w-8 ring ring-primary ring-offset-base-100 ring-offset-2">
+              <span className="text-lg">{user[0]?.trim()?.toUpperCase()}</span>
             </div>
           </div>
         </label>

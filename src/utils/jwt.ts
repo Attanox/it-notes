@@ -8,5 +8,9 @@ export function signJwt<T extends object>(data: T) {
 }
 
 export function verifyJwt<T>(token: string) {
-  return jwt.verify(token, SECRET) as T;
+  try {
+    return jwt.verify(token, SECRET) as T;
+  } catch (e) {
+    console.error(e);
+  }
 }

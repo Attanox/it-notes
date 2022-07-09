@@ -13,8 +13,6 @@ const Card = (props: { book: Book; action?: boolean }) => {
         <Image
           src={book.image}
           alt={"book cover"}
-          width="100%"
-          height="100%"
           layout="fill"
           objectFit="contain"
         />

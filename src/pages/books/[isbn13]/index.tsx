@@ -50,24 +50,12 @@ const BookDetail = ({
   book,
   authenticated,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const addBookMutation = trpc.useMutation(["books.add-book"]);
   const removeChapterMutation = trpc.useMutation(["books.remove-chapter"]);
 
   const listChaptersQuery = trpc.useQuery(
     ["books.list-chapters", { bookId: book?.isbn13 || "" }],
     { enabled: !!book }
   );
-
-  const onAddBook = () => {
-    if (!book) return;
-    addBookMutation.mutate({
-      title: book.title,
-      subtitle: book.subtitle,
-      isbn13: book.isbn13,
-      image: book.image,
-      price: book.price,
-    });
-  };
 
   const onRemoveChapter = (chapterID: string) => {
     if (!chapterID) return;
@@ -76,28 +64,27 @@ const BookDetail = ({
   };
 
   if (!authenticated) {
-    return <div>cant be here</div>;
-  }
-
-  if (!book) {
     return (
-      <button
-        onClick={onAddBook}
-        disabled={addBookMutation.isLoading}
-        className="btn btn-success"
-      >
-        add book
-      </button>
+      <div className="text-center">
+        Please,{" "}
+        <Link href="login">
+          <a className="link">login</a>, so you can take notes.
+        </Link>
+      </div>
     );
   }
 
+  if (!book) {
+    return null;
+  }
+
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-row mt-2">
       <div className="w-96">
         <Card book={book} action={false} />
       </div>
       <div className="h-full w-4" />
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col w-full mt-8">
         <div className="flex flex-row">
           <GoBack />
           <Link href={`/books/${book.isbn13}/chapter/add`}>
@@ -125,12 +112,11 @@ const BookDetail = ({
                   </h3>
                 </div>
 
-                <button
-                  onClick={() => onRemoveChapter(chapter.id)}
-                  className="btn btn-circle text-xl"
-                >
-                  <AiFillEdit className="fill-green-400" />
-                </button>
+                <Link href={`/books/${book.isbn13}/chapter/${chapter.id}`}>
+                  <a className="btn btn-circle text-xl">
+                    <AiFillEdit className="fill-green-400" />
+                  </a>
+                </Link>
                 <div className="w-2" />
                 <button
                   onClick={() => onRemoveChapter(chapter.id)}
