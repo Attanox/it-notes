@@ -1,15 +1,16 @@
 import * as React from "react";
-import type {
-  GetServerSideProps,
-  InferGetServerSidePropsType,
-  NextPage,
-} from "next";
 import Head from "next/head";
 
 import Spinner from "components/Spinner";
 import BookList from "components/BookList";
 import { trpc } from "utils/trpc";
-import Link from "next/link";
+import { withAuth } from "utils/withAuth";
+
+export const getServerSideProps = withAuth<{}>(async (ctx) => {
+  return {
+    props: {},
+  };
+});
 
 const MyNotes = () => {
   const myNotesQuery = trpc.useQuery(["books.my-notes"]);

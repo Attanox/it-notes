@@ -28,7 +28,6 @@ const AuthUserContext = React.createContext<{
 const reducer = (state: TState, action: ReturnType<TActions>): TState => {
   switch (action.type) {
     case "AUTH/LOGIN":
-      console.log({ action });
       return {
         ...state,
         user: action.payload?.name,

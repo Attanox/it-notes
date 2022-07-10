@@ -63,7 +63,11 @@ export const authRouter = createRouter()
       }
 
       if (bcrypt.compareSync(password, user.password)) {
-        setUserCookie(user.name, ctx.res);
+        try {
+          await setUserCookie(user.name, ctx.res);
+        } catch (e) {
+          console.error({ error: e });
+        }
 
         return { name: user.name };
       } else {
@@ -76,7 +80,7 @@ export const authRouter = createRouter()
   })
   .mutation("logout", {
     async resolve({ ctx }) {
-      expireUserCookie(ctx.res);
+      await expireUserCookie(ctx.res);
 
       return true;
     },

@@ -1,12 +1,10 @@
 // eslint-disable-next-line @next/next/no-server-import-in-page
-import type { NextRequest } from "next/server";
+import type { NextRequest, NextResponse } from "next/server";
 import { SignJWT, jwtVerify } from "jose";
 import { NextApiResponse } from "next";
 import * as cookie from "cookie";
 
-import { threeDaysInSec } from "utils/constants";
-
-const SECRET = process.env.JWT_SECRET || "changeme";
+const SECRET = process.env.JWT_SECRET;
 
 export class AuthError extends Error {}
 
@@ -24,7 +22,7 @@ export async function verifyJWT(token: string) {
  * Verifies the user's JWT token and returns its payload if it's valid.
  */
 export async function verifyAuth(req: NextRequest) {
-  const token = req.cookies.get("token");
+  const token = req.headers.get("token");
 
   if (!token) throw new AuthError("Missing user token");
 
@@ -39,20 +37,25 @@ export async function verifyAuth(req: NextRequest) {
  * Adds the user token cookie to a response.
  */
 export async function setUserCookie(name: string, res: NextApiResponse) {
-  const token = await new SignJWT({})
-    .setProtectedHeader({ alg: "HS256" })
-    .setJti(name)
-    .setIssuedAt()
-    .setExpirationTime(threeDaysInSec)
-    .sign(new TextEncoder().encode(SECRET));
+  try {
+    const token = await new SignJWT({})
+      .setProtectedHeader({ alg: "HS256" })
+      .setJti(name)
+      .setIssuedAt()
+      .setExpirationTime("2h")
+      .sign(new TextEncoder().encode(SECRET));
 
-  res.setHeader(
-    "Set-cookie",
-    cookie.serialize("token", token, {
-      httpOnly: true,
-      maxAge: threeDaysInSec,
-    })
-  );
+    res.setHeader(
+      "Set-cookie",
+      cookie.serialize("token", token, {
+        httpOnly: true,
+        path: "/",
+        maxAge: 60 * 60 * 2, // 2 hours in seconds,
+      })
+    );
+  } catch (e) {
+    console.error({ setCookies: e });
+  }
 }
 
 /**
@@ -63,6 +66,7 @@ export function expireUserCookie(res: NextApiResponse) {
     "Set-Cookie",
     cookie.serialize("token", "invalid", {
       httpOnly: true,
+      path: "/",
       maxAge: 0,
     })
   );
