@@ -19,6 +19,7 @@
     "bcrypt": "^5.0.1",
     "cookie": "^0.5.0",
     "daisyui": "^2.18.0",
+    "jose": "^4.8.3",
     "jsonwebtoken": "^8.5.1",
     "next": "12.2.0",
     "next-remove-imports": "^1.0.6",

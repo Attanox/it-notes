@@ -3,7 +3,6 @@ import Spinner from "components/Spinner";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import * as React from "react";
 import { AiFillEdit } from "react-icons/ai";
-import { verifyJwt } from "utils/jwt";
 import { trpc } from "utils/trpc";
 
 type LocalProps = {
@@ -16,12 +15,6 @@ export const getServerSideProps: GetServerSideProps<LocalProps> = async (
 ) => {
   const bookID = ctx?.params?.isbn13 as string;
   const chapterID = ctx?.params?.id as string;
-
-  const token = ctx.req.cookies["token"] || "";
-
-  const authSession = verifyJwt<{ name: string }>(token);
-
-  if (!authSession) return { props: { bookID: "", chapterID: "" } };
 
   return {
     props: {

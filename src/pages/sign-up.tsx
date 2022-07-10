@@ -1,24 +1,19 @@
 import * as React from "react";
 import { useRouter } from "next/router";
 
-import { useAuthAPI } from "context/auth";
 import { trpc } from "utils/trpc";
 import AuthForm from "components/AuthForm";
 
 function LoginPage() {
   const router = useRouter();
-  const { loginUser } = useAuthAPI();
 
-  const mutation = trpc.useMutation(["auth.login"], {
-    onSuccess: ({ name }) => {
-      loginUser(name);
-      router.push("/");
-    },
+  const mutation = trpc.useMutation(["auth.signup"], {
+    onSuccess: () => router.push("/login"),
   });
 
   return (
     <AuthForm
-      name="Login"
+      name="Register"
       mutate={mutation.mutate}
       error={mutation.error}
       isLoading={mutation.isLoading}

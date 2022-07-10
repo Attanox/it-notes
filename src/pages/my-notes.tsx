@@ -9,54 +9,10 @@ import Head from "next/head";
 import Spinner from "components/Spinner";
 import BookList from "components/BookList";
 import { trpc } from "utils/trpc";
-import { verifyJwt } from "utils/jwt";
 import Link from "next/link";
 
-export const getServerSideProps: GetServerSideProps<{
-  authenticated: boolean;
-}> = async (ctx) => {
-  const token = ctx.req.cookies["token"] || "";
-
-  try {
-    const authSession = verifyJwt<{ name: string }>(token);
-
-    if (!authSession) {
-      return {
-        props: {
-          authenticated: false,
-        },
-      };
-    }
-  } catch (e) {
-    return {
-      props: {
-        authenticated: false,
-      },
-    };
-  }
-
-  return {
-    props: {
-      authenticated: true,
-    },
-  };
-};
-
-const MyNotes = ({
-  authenticated,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const MyNotes = () => {
   const myNotesQuery = trpc.useQuery(["books.my-notes"]);
-
-  if (!authenticated)
-    return (
-      <div className="text-center">
-        Please,{" "}
-        <Link href="/login">
-          <a className="link">login</a>
-        </Link>
-        , so you can take notes.
-      </div>
-    );
 
   return (
     <>

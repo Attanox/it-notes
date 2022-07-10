@@ -3,7 +3,6 @@ import { AiFillDelete, AiFillEdit, AiOutlinePlusCircle } from "react-icons/ai";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 import { trpc } from "utils/trpc";
-import { verifyJwt } from "utils/jwt";
 import { fetchBook } from "utils/fetch";
 import Card from "components/Card";
 import Link from "next/link";
@@ -11,9 +10,7 @@ import type { Book } from "types/books";
 import GoBack from "components/GoBack";
 
 type LocalProps = {
-  authenticated: boolean;
   book: Book | null;
-  user?: string;
 };
 
 export const getServerSideProps: GetServerSideProps<LocalProps> = async (
@@ -23,31 +20,15 @@ export const getServerSideProps: GetServerSideProps<LocalProps> = async (
     ? await fetchBook(ctx?.params?.isbn13 as string)
     : null;
 
-  const token = ctx.req.cookies["token"] || "";
-
-  const authSession = verifyJwt<{ name: string }>(token);
-
-  if (!authSession) {
-    return {
-      props: {
-        authenticated: false,
-        book: null,
-      },
-    };
-  }
-
   return {
     props: {
       book,
-      authenticated: true,
-      user: authSession.name,
     },
   };
 };
 
 const BookDetail = ({
   book,
-  authenticated,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const removeChapterMutation = trpc.useMutation(["books.remove-chapter"]);
 
@@ -61,18 +42,6 @@ const BookDetail = ({
     removeChapterMutation.mutate({ chapterID });
     listChaptersQuery.refetch();
   };
-
-  if (!authenticated) {
-    return (
-      <div className="text-center">
-        Please,{" "}
-        <Link href="login">
-          <a className="link">login</a>
-        </Link>
-        , so you can take notes.
-      </div>
-    );
-  }
 
   if (!book) {
     return null;

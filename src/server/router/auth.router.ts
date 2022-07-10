@@ -1,11 +1,9 @@
 import { createRouter } from "./context";
 import { z } from "zod";
 import * as bcrypt from "bcrypt";
-import * as cookie from "cookie";
 import { TRPCError } from "@trpc/server";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
-import { signJwt } from "../../utils/jwt";
-import { threeDaysInSec } from "../../utils/constants";
+import { expireUserCookie, setUserCookie } from "lib/auth";
 
 export const authRouter = createRouter()
   .mutation("signup", {
@@ -65,16 +63,7 @@ export const authRouter = createRouter()
       }
 
       if (bcrypt.compareSync(password, user.password)) {
-        const token = signJwt({ name: user.name });
-
-        ctx.res.setHeader(
-          "Set-cookie",
-          cookie.serialize("token", token, {
-            httpOnly: true,
-            path: "/",
-            maxAge: threeDaysInSec,
-          })
-        );
+        setUserCookie(user.name, ctx.res);
 
         return { name: user.name };
       } else {
@@ -87,13 +76,7 @@ export const authRouter = createRouter()
   })
   .mutation("logout", {
     async resolve({ ctx }) {
-      ctx.res.setHeader(
-        "Set-Cookie",
-        cookie.serialize("token", "invalid", {
-          httpOnly: true,
-          path: "/",
-        })
-      );
+      expireUserCookie(ctx.res);
 
       return true;
     },

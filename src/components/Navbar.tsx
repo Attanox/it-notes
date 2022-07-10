@@ -70,7 +70,9 @@ const AuthBtn = () => {
 const Navbar = () => {
   return (
     <div className="navbar bg-base-100 px-0">
-      <a className="normal-case text-xl">BookNotes</a>
+      <Link href="/">
+        <a className="normal-case text-xl tracking-widest">BookNotes</a>
+      </Link>
       <AuthBtn />
     </div>
   );

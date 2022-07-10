@@ -2,7 +2,8 @@
 import * as trpc from "@trpc/server";
 import * as trpcNext from "@trpc/server/adapters/next";
 import { NextApiRequest } from "next";
-import { verifyJwt } from "utils/jwt";
+
+import { verifyJWT } from "lib/auth";
 import { prisma } from "../db/client";
 
 const getUserFromCookies = async (req: NextApiRequest) => {
@@ -11,12 +12,16 @@ const getUserFromCookies = async (req: NextApiRequest) => {
 
   try {
     // if token is invalid, `verify` will throw an error
-    const payload = verifyJwt<{ name: string }>(token);
+    const payload = await verifyJWT(token).catch((err) => {
+      console.error(err.message);
+    });
+
+    if (!payload) return null;
 
     // find user in database
     const user = await prisma.user.findUnique({
       where: {
-        name: payload.name,
+        name: payload.jti,
       },
     });
 
