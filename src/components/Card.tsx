@@ -8,7 +8,10 @@ const Card = (props: { book: Book; action?: boolean }) => {
   const { book, action = true } = props;
 
   return (
-    <div className="card card-compact w-full min-h-fit shadow-x ">
+    <div
+      className="card card-compact rounded border input-bordered w-full min-h-fit"
+      style={{ borderColor: "hsl(var(--bc) / var(--tw-border-opacity))" }}
+    >
       <figure className="w-full relative" style={{ minHeight: "250px" }}>
         <Image
           src={book.image}
