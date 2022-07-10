@@ -4,22 +4,22 @@ import { AiOutlinePlusCircle } from "react-icons/ai";
 
 import { trpc } from "utils/trpc";
 import EditChapterForm from "components/EditChapterForm";
-import { withAuth } from "utils/withAuth";
 
 type LocalProps = {
   bookID: string;
 };
 
-export const getServerSideProps: GetServerSideProps<LocalProps> =
-  withAuth<LocalProps>(async (ctx) => {
-    const bookID = ctx?.params?.isbn13 as string;
+export const getServerSideProps: GetServerSideProps<LocalProps> = async (
+  ctx
+) => {
+  const bookID = ctx?.params?.isbn13 as string;
 
-    return {
-      props: {
-        bookID,
-      },
-    };
-  });
+  return {
+    props: {
+      bookID,
+    },
+  };
+};
 
 const AddChapter = ({
   bookID,

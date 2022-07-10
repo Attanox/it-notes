@@ -10,7 +10,7 @@ function LoginPage() {
   const { loginUser } = useAuthAPI();
 
   const mutation = trpc.useMutation(["auth.login"], {
-    onSuccess: ({ name }) => {
+    onSuccess: ({ name, token }) => {
       loginUser(name);
       router.push("/");
     },

@@ -22,7 +22,7 @@ export async function verifyJWT(token: string) {
  * Verifies the user's JWT token and returns its payload if it's valid.
  */
 export async function verifyAuth(req: NextRequest) {
-  const token = req.headers.get("token");
+  const token = req.cookies.get("token");
 
   if (!token) throw new AuthError("Missing user token");
 
@@ -53,6 +53,8 @@ export async function setUserCookie(name: string, res: NextApiResponse) {
         maxAge: 60 * 60 * 2, // 2 hours in seconds,
       })
     );
+
+    return token;
   } catch (e) {
     console.error({ setCookies: e });
   }
@@ -63,7 +65,7 @@ export async function setUserCookie(name: string, res: NextApiResponse) {
  */
 export function expireUserCookie(res: NextApiResponse) {
   res.setHeader(
-    "Set-Cookie",
+    "set-cookie",
     cookie.serialize("token", "invalid", {
       httpOnly: true,
       path: "/",

@@ -7,15 +7,18 @@ import { trpc } from "utils/trpc";
 
 const AuthBtn = () => {
   const router = useRouter();
-  const mutation = trpc.useMutation(["auth.logout"]);
+  const mutation = trpc.useMutation(["auth.logout"], {
+    onSuccess: () => {
+      logoutUser();
+      router.push("/login");
+    },
+  });
   const { logoutUser } = useAuthAPI();
   const { user } = useAuthUser();
 
   const onClick = () => {
     try {
       mutation.mutate();
-      logoutUser();
-      router.push("/login");
     } catch (e) {
       console.error(e);
     }

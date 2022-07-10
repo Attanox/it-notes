@@ -19,22 +19,23 @@ const AppContent: AppType = ({ Component, pageProps }) => {
   const query = trpc.useQuery(["auth.whoami"], {
     onSuccess(data) {
       console.log({ data });
-      if (data) loginUser(data?.name);
+      if (data?.name) loginUser(data?.name);
     },
   });
 
-  if (query.isLoading) {
-    return (
-      <div className="w-full min-h-screen flex items-center justify-center">
-        <Spinner />
-      </div>
-    );
-  }
-
   return (
     <div className="w-1/2 min-h-screen mx-auto">
-      <Navbar />
-      <Component {...pageProps} />
+      {query.isLoading ? (
+        <div className="w-full min-h-screen flex items-center justify-center">
+          <Spinner />
+        </div>
+      ) : (
+        <>
+          <Navbar />
+
+          <Component {...pageProps} />
+        </>
+      )}
     </div>
   );
 };

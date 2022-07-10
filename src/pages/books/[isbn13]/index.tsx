@@ -8,24 +8,24 @@ import Card from "components/Card";
 import Link from "next/link";
 import type { Book } from "types/books";
 import GoBack from "components/GoBack";
-import { withAuth } from "utils/withAuth";
 
 type LocalProps = {
   book: Book | null;
 };
 
-export const getServerSideProps: GetServerSideProps<LocalProps> =
-  withAuth<LocalProps>(async (ctx) => {
-    const book = ctx.params
-      ? await fetchBook(ctx?.params?.isbn13 as string)
-      : null;
+export const getServerSideProps: GetServerSideProps<LocalProps> = async (
+  ctx
+) => {
+  const book = ctx.params
+    ? await fetchBook(ctx?.params?.isbn13 as string)
+    : null;
 
-    return {
-      props: {
-        book,
-      },
-    };
-  });
+  return {
+    props: {
+      book,
+    },
+  };
+};
 
 const BookDetail = ({
   book,

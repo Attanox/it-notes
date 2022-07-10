@@ -64,12 +64,13 @@ export const authRouter = createRouter()
 
       if (bcrypt.compareSync(password, user.password)) {
         try {
-          await setUserCookie(user.name, ctx.res);
+          const token = await setUserCookie(user.name, ctx.res);
+          return { name: user.name, token };
         } catch (e) {
           console.error({ error: e });
         }
 
-        return { name: user.name };
+        return { name: "", token: undefined };
       } else {
         throw new TRPCError({
           code: "NOT_FOUND",

@@ -4,25 +4,25 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import * as React from "react";
 import { AiFillEdit } from "react-icons/ai";
 import { trpc } from "utils/trpc";
-import { withAuth } from "utils/withAuth";
 
 type LocalProps = {
   bookID: string;
   chapterID: string;
 };
 
-export const getServerSideProps: GetServerSideProps<LocalProps> =
-  withAuth<LocalProps>(async (ctx) => {
-    const bookID = ctx?.params?.isbn13 as string;
-    const chapterID = ctx?.params?.id as string;
+export const getServerSideProps: GetServerSideProps<LocalProps> = async (
+  ctx
+) => {
+  const bookID = ctx?.params?.isbn13 as string;
+  const chapterID = ctx?.params?.id as string;
 
-    return {
-      props: {
-        bookID,
-        chapterID,
-      },
-    };
-  });
+  return {
+    props: {
+      bookID,
+      chapterID,
+    },
+  };
+};
 
 const UpdateChapter = ({
   bookID,

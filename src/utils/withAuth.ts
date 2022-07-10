@@ -1,6 +1,12 @@
 import { verifyJWT } from "lib/auth";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 
+/**
+ * alternative to middleware solution
+ *
+ * @param getServerSidePropsFn : GetServerSideProps<P>
+ * @returns GetServerSideProps<P>
+ */
 export const withAuth =
   <P>(getServerSidePropsFn: GetServerSideProps<P>): GetServerSideProps<P> =>
   async (ctx: GetServerSidePropsContext) => {
