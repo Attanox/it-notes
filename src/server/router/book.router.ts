@@ -112,7 +112,7 @@ export const booksRouter = createRouter()
       const chapters = await ctx.prisma.bookNote
         .findFirst({
           where: {
-            isbn13: input.bookId,
+            id: input.bookId,
             authorId: ctx.user?.id,
           },
         })

@@ -18,21 +18,22 @@ model Example {
 model User {
     id String @id @default(uuid())
 
-    name String @unique
+    name     String @unique
     password String
 
     bookNotes BookNote[]
 }
 
 model BookNote {
-    isbn13 String @id 
+    id     String @id @default(uuid())
+    isbn13 String
 
-    title String
+    title    String
     subtitle String?
-    image String
-    price String
+    image    String
+    price    String
 
-    author User @relation(fields: [authorId], references: [id])
+    author   User   @relation(fields: [authorId], references: [id])
     authorId String
 
     chapters Chapter[]
@@ -43,11 +44,11 @@ model BookNote {
 
 model Chapter {
     id String @id @default(uuid())
-    
-    title String
-    text String
 
-    bookNote BookNote @relation(fields: [bookNoteId], references: [isbn13])
+    title String
+    text  String
+
+    bookNote   BookNote @relation(fields: [bookNoteId], references: [id])
     bookNoteId String
 
     createdAt DateTime @default(now())
