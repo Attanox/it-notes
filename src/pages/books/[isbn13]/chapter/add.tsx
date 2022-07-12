@@ -25,10 +25,13 @@ const AddChapter = ({
   bookID,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const addChapterMutation = trpc.useMutation(["books.add-chapter"]);
+  const book = trpc.useQuery(["books.get-book", { isbn13: bookID }], {
+    enabled: !!bookID,
+  });
 
   const onAddChapter = (chapterTitle: string, chapterText: string) => {
     addChapterMutation.mutate({
-      bookID: bookID,
+      bookID: String(book.data?.id),
       payload: {
         text: chapterText,
         title: chapterTitle,
@@ -36,7 +39,7 @@ const AddChapter = ({
     });
   };
 
-  if (!bookID) return null;
+  if (!bookID || book.isLoading) return null;
 
   return (
     <div className="w-full flex flex-col">

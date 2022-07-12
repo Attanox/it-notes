@@ -31,6 +31,36 @@ export const booksRouter = createRouter()
       return { books, pages };
     },
   })
+  .query("have-book", {
+    input: z.object({
+      isbn13: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      const bookNote = await ctx.prisma.bookNote.findFirst({
+        where: {
+          authorId: String(ctx.user?.id),
+          isbn13: input.isbn13,
+        },
+      });
+
+      return !!bookNote;
+    },
+  })
+  .query("get-book", {
+    input: z.object({
+      isbn13: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      const bookNote = await ctx.prisma.bookNote.findFirst({
+        where: {
+          authorId: String(ctx.user?.id),
+          isbn13: input.isbn13,
+        },
+      });
+
+      return bookNote;
+    },
+  })
   .mutation("add-book", {
     input: z.object({
       title: z.string(),
@@ -112,7 +142,7 @@ export const booksRouter = createRouter()
       const chapters = await ctx.prisma.bookNote
         .findFirst({
           where: {
-            id: input.bookId,
+            isbn13: input.bookId,
             authorId: ctx.user?.id,
           },
         })
