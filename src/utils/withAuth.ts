@@ -8,12 +8,11 @@ import { GetServerSideProps, GetServerSidePropsContext } from "next";
  * @returns GetServerSideProps<P>
  */
 export const withAuth =
-  <P>(getServerSidePropsFn: GetServerSideProps<P>): GetServerSideProps<P> =>
+  <P extends { [key: string]: any }>(
+    getServerSidePropsFn: GetServerSideProps<P>
+  ): GetServerSideProps<P> =>
   async (ctx: GetServerSidePropsContext) => {
     const token = ctx.req.cookies?.token;
-    console.log("token: ", token);
-    console.log("ctx: ", ctx.req.cookies);
-    console.log("ctx: ", ctx.req.headers);
 
     if (!token) {
       return {

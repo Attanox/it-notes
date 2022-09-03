@@ -30,11 +30,24 @@ const ChapterText = (props: {
   const windowHeightMinusOtherElements = height - 84 - 64 - 20 - 32 - 40 - 10;
 
   return (
-    <MDEditor
-      value={value}
-      onChange={onChange}
-      height={windowHeightMinusOtherElements}
-    />
+    <>
+      <div className="hidden md:block">
+        <MDEditor
+          value={value}
+          onChange={onChange}
+          height={windowHeightMinusOtherElements}
+        />
+      </div>
+      <div className="block md:hidden">
+        <textarea
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          style={{ height: windowHeightMinusOtherElements }}
+          className="w-full textarea textarea-bordered"
+          placeholder="Type your notes"
+        />
+      </div>
+    </>
   );
 };
 
@@ -73,7 +86,7 @@ const EditChapterForm = (props: LocalProps) => {
 
   return (
     <>
-      <div className="form-control w-1/2">
+      <div className="form-control w-full md:w-1/2">
         <label className="label" htmlFor="chapter-title">
           <span className="label-text">Chapter name</span>
         </label>

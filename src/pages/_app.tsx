@@ -18,13 +18,12 @@ const AppContent: AppType = ({ Component, pageProps }) => {
   const { loginUser } = useAuthAPI();
   const query = trpc.useQuery(["auth.whoami"], {
     onSuccess(data) {
-      console.log({ data });
       if (data?.name) loginUser(data?.name);
     },
   });
 
   return (
-    <div className="w-1/2 min-h-screen mx-auto">
+    <div className="w-full p-2 md:p-0 md:w-4/5 min-h-screen mx-auto">
       {query.isLoading ? (
         <div className="w-full min-h-screen flex items-center justify-center">
           <Spinner />

@@ -8,38 +8,25 @@ import Pagination from "components/Pagination";
 import Search from "components/Search";
 import { trpc } from "utils/trpc";
 import type { Book } from "types/books";
-
-const BooksList = (props: { books: Book[] }) => {
-  const { books } = props;
-
-  if (!books.length) {
-    return <p className="text-center text-2xl">No books :(</p>;
-  }
-
-  return (
-    <div className="grid gap-8 grid-cols-3">
-      {books.map((book) => (
-        <Card key={book.isbn13} book={book} />
-      ))}
-    </div>
-  );
-};
+import BookList from "components/BookList";
 
 const Home: NextPage = () => {
   const [bookData, setBookData] = React.useState<Book[]>([]);
   const [pages, setPages] = React.useState(1);
+  const [activePage, setActivePage] = React.useState(1);
 
   const newestQuery = trpc.useQuery(["books.newest"], {
     onSuccess: (data) => setBookData(data),
+    enabled: !bookData.length,
   });
+
   const searchMutation = trpc.useMutation(["books.search"], {
-    onSuccess: ({ books, pages }, variables) => {
+    onSuccess: ({ books, pages }, { page }) => {
       setBookData(books);
       // * we're counting total on each request which can change number of pages at last page
       // * so we're setting number of pages only after clicking search button
-      if (variables?.page === undefined) {
-        setPages(pages);
-      }
+      setPages(pages);
+      setActivePage(page || 1);
     },
   });
 
@@ -59,17 +46,20 @@ const Home: NextPage = () => {
               <Spinner />
             </div>
           ) : (
-            <BooksList books={bookData || []} />
+            <>
+              <BookList books={bookData || []} />
+              <Pagination
+                activePage={activePage}
+                numberOfPages={pages}
+                onPageChange={(page) =>
+                  searchMutation.mutate({
+                    searchQuery: searchMutation.variables?.searchQuery || "",
+                    page,
+                  })
+                }
+              />
+            </>
           )}
-          <Pagination
-            numberOfPages={pages}
-            onPageChange={(page) =>
-              searchMutation.mutate({
-                searchQuery: searchMutation.variables?.searchQuery || "",
-                page,
-              })
-            }
-          />
         </div>
       </div>
     </>

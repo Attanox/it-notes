@@ -26,8 +26,6 @@ export function fetchBook(isbn13 = "", customConfig = {}): Promise<Book> {
 
   const url = `${process.env.BOOKS_URL}books/${isbn13}`;
 
-  console.log({ url });
-
   return fetch(url, config).then(async (response) => {
     if (response.ok) {
       return await response.json();

@@ -32,7 +32,7 @@ const AuthForm = (props: {
     <div className="w-full h-full">
       <form
         onSubmit={handleSubmit}
-        className="block w-96 mx-auto absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-base-300 px-4 py-6 rounded box-content"
+        className="block w-80 md:w-96 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-base-300 px-4 py-6 rounded box-content"
       >
         <h1 className="text-3xl text-center mb-2">{name}</h1>
         <div className="form-control w-full">

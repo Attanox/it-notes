@@ -16,9 +16,12 @@ export const booksRouter = createRouter()
       page: z.number().nullish(),
     }),
     async resolve({ input }) {
-      let query = `search/${input.searchQuery}`;
-      if (input.page) {
-        query = `${query}/${input.page}`;
+      let query = "new";
+      if (input.searchQuery) {
+        query = `search/${input.searchQuery}`;
+        if (input.page) {
+          query = `${query}/${input.page}`;
+        }
       }
 
       const { total, books } = await fetchBooks(query);

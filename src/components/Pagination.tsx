@@ -1,13 +1,14 @@
 import * as React from "react";
 
 const Pagination = (props: {
+  activePage: number;
   numberOfPages: number;
   onPageChange: (page: number) => void;
 }) => {
-  const { numberOfPages, onPageChange } = props;
-  const [active, setActive] = React.useState(1);
+  const { numberOfPages, onPageChange, activePage } = props;
+  const [active, setActive] = React.useState(activePage);
 
-  const onClick = (page: number) => {
+  const onChangePage = (page: number) => {
     setActive(page);
     onPageChange(page);
   };
@@ -22,7 +23,7 @@ const Pagination = (props: {
         return (
           <button
             key={pageNumber}
-            onClick={() => onClick(pageNumber)}
+            onClick={() => onChangePage(pageNumber)}
             className={`btn ${pageNumber === active ? "btn-active" : ""}`}
           >
             {pageNumber}

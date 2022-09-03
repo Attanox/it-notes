@@ -10,7 +10,10 @@ const BookList = (props: { books: Book[] }) => {
   }
 
   return (
-    <div className="grid gap-8 grid-cols-3">
+    <div
+      style={{ gridTemplateColumns: "repeat( auto-fit, minmax(250px, 1fr) )" }}
+      className="grid gap-8"
+    >
       {books.map((book) => (
         <Card key={book.isbn13} book={book} />
       ))}

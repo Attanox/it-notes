@@ -56,8 +56,8 @@ const BookDetail = ({
   }
 
   return (
-    <div className="flex flex-row mt-2">
-      <div className="w-96">
+    <div className="w-full flex flex-col md:flex-row mt-2">
+      <div className="w-80 md:w-96 mx-auto">
         <Card book={book} action={false} />
       </div>
       <div className="h-full w-4" />
