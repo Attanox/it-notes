@@ -1,10 +1,17 @@
 import * as React from "react";
 
-const Spinner = () => {
+interface Props {
+  width?: string;
+  height?: string;
+}
+
+const Spinner = ({ height, width }: Props) => {
   return (
     <svg
       role="status"
-      className="inline w-16 h-16 text-gray-200 animate-spin dark:text-gray-600 fill-gray-600 dark:fill-gray-300"
+      className={`inline ${width || "w-16"} ${
+        height || "h-16"
+      } text-gray-200 animate-spin dark:text-gray-600 fill-gray-600 dark:fill-gray-300`}
       viewBox="0 0 100 101"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
