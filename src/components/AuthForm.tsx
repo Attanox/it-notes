@@ -40,6 +40,7 @@ const AuthForm = (props: {
             <span className="label-text">Name</span>
           </label>
           <input
+            defaultValue={name === "Login" ? "Test" : ""}
             type="text"
             placeholder="Type here"
             className="input input-bordered w-full"
@@ -51,6 +52,7 @@ const AuthForm = (props: {
             <span className="label-text">Password</span>
           </label>
           <input
+            defaultValue={name === "Login" ? "1234" : ""}
             type="password"
             placeholder="Type here"
             className="input input-bordered w-full"
