@@ -4,6 +4,13 @@ import Head from "next/head";
 import Spinner from "components/Spinner";
 import BookList from "components/BookList";
 import { trpc } from "utils/trpc";
+import { withAuth } from "utils/withAuth";
+
+export const getServerSideProps = withAuth(async () => {
+  return {
+    props: {},
+  };
+});
 
 const MyNotes = () => {
   const myNotesQuery = trpc.useQuery(["books.my-notes"]);

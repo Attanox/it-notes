@@ -3,22 +3,23 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 import { trpc } from "utils/trpc";
 import EditChapterForm from "components/EditChapterForm";
+import { withAuth } from "utils/withAuth";
 
 type LocalProps = {
   bookID: string;
 };
 
-export const getServerSideProps: GetServerSideProps<LocalProps> = async (
-  ctx
-) => {
-  const bookID = ctx?.params?.isbn13 as string;
+export const getServerSideProps: GetServerSideProps<LocalProps> = withAuth(
+  async (ctx) => {
+    const bookID = ctx?.params?.isbn13 as string;
 
-  return {
-    props: {
-      bookID,
-    },
-  };
-};
+    return {
+      props: {
+        bookID,
+      },
+    };
+  }
+);
 
 const AddChapter = ({
   bookID,
